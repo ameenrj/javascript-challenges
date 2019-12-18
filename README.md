@@ -1,18 +1,18 @@
 ## JavaScript Challenges
 
+### Description
 
+This repo contains a collection of various JavaScript and SQL challenges. Using JavaScript, TypeScript, Jest.
 
 ### Assumptions
 
-Question 1
-- The solution to this question must be a 
-
 Question 2
-- The right balance of performance and simplicity is required.
+- The right balance of performance and simplicity is required
     - Simplest solution would be to loop over O(n) times
     - Most performant solution would be to use the 'Divisor function' in mathematics/number theory
 
 SQL Questions (Question 5-6)
+- Using MySQL 8.0.12 is okay
 - Column naming convention is PascalCase as in the spec (ColumnID vs column_id)
 
 Question 8
