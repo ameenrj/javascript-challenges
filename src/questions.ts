@@ -19,11 +19,11 @@ export const getPositiveDivisors = (num: number): number[] => {
     if (num % i === 0) {
       divisors.push(i)
 
-      if (num / i !== i) secondDivisors.push(num / i)
+      if (num / i !== i) secondDivisors.unshift(num / i)
     }
   }
 
-  return [...divisors, ...secondDivisors.reverse()]
+  return [...divisors, ...secondDivisors]
 }
 
 // Question 3 - given by Heron's Formula
