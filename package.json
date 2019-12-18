@@ -1,0 +1,23 @@
+{
+  "name": "javascript-challenges",
+  "version": "1.0.0",
+  "description": "A collection of solved JavaScript challenges",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "test": "jest --watchAll --verbose"
+  },
+  "author": "Ameen Ramadan-Jradi <ameen.ramadan.jradi@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "make-fetch-happen": "^7.1.0",
+    "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "@types/node": "^12.12.17",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.3"
+  }
+}

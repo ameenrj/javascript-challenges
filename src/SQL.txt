@@ -1,0 +1,120 @@
+Question 5
+
+a) Return the names of all salespeople that have an order with George
+
+SELECT s.`name`
+FROM   `orders` o
+       INNER JOIN `customer` c
+               ON o.`customerid` = c.`customerid`
+       INNER JOIN `salesperson` s
+               ON o.`salespersonid` = s.`salespersonid`
+WHERE  c.`name` = 'George';
+
+b) Return the names of all salespeople that do not have any order with George
+
+SELECT s.`name`
+FROM   `salesperson` s
+WHERE  s.`salespersonid` NOT IN (SELECT s.`salespersonid`
+                                 FROM   `orders` o
+                                        INNER JOIN `customer` c
+                                                ON o.`customerid` =
+                                                   c.`customerid`
+                                        INNER JOIN `salesperson` s
+                                                ON o.`salespersonid` =
+                                                   s.`salespersonid`
+                                 WHERE  c.`name` = 'George');
+
+c) Return the names of salespeople that have 2 or more orders
+
+SELECT s.`name`
+FROM   `salesperson` s
+       LEFT OUTER JOIN `orders` o
+                    ON s.`salespersonid` = o.`salespersonid`
+GROUP  BY s.`name`
+HAVING Count(o.`orderid`) >= 2;
+
+
+Question 6
+
+A) Return the name of the salesperson with the 3rd highest salary
+
+SELECT *
+FROM   `salesperson`
+ORDER  BY `salary` DESC
+LIMIT  2, 1;
+
+
+B) Create a new roll­up table BigOrders(where columns are CustomerID, TotalOrderValue), and insert into that table customers whose total Amount across all orders is greater than 1000
+
+CREATE TABLE BigOrders
+  SELECT `customerid`                        AS CustomerId,
+         Sum(`numberofunits` * `costofunit`) AS TotalOrderValue
+  FROM   `orders`
+  GROUP  BY `customerid`
+  HAVING totalordervalue > 1000;
+
+
+C) Return the total Amount of orders for each month, ordered by year, then month (both in descending order)
+
+SELECT Year(`orderdate`) AS Year,
+       Month(`orderdate`)  AS Month,
+       Count(*)           AS TotalOrders
+FROM   `orders`
+GROUP  BY Year(`orderdate`) DESC,
+          Month(`orderdate`) DESC;
+
+Database Setup - (tested in MySQL 8.0.12)
+
+CREATE TABLE `Salesperson` (
+  `SalespersonID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(255) NOT NULL,
+  `Age` int(3) NOT NULL,
+  `Salary` int(11) NOT NULL,
+  PRIMARY KEY (SalespersonID)
+);
+
+CREATE TABLE `Customer` (
+  `CustomerID` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (CustomerID)
+);
+
+CREATE TABLE `Orders` (
+  `OrderID` int(11) NOT NULL AUTO_INCREMENT,
+  `OrderDate` date NOT NULL,
+  `CustomerID` int(11) NOT NULL,
+  `SalespersonID` int(11) NOT NULL,
+  `NumberOfUnits` int(11) NOT NULL,
+  `CostOfUnit` int(11) NOT NULL,
+  PRIMARY KEY (OrderID),
+  CONSTRAINT `fk_orders_customer` FOREIGN KEY (`CustomerID`) REFERENCES `Customer` (`CustomerID`),
+  CONSTRAINT `fk_orders_salesperson` FOREIGN KEY (`SalespersonID`) REFERENCES `Salesperson` (`SalespersonID`)
+);
+
+Seeds
+
+INSERT INTO `Salesperson` (`SalespersonID`, `Name`, `Age`, `Salary`)
+VALUES
+    (1, 'Alice', 61, 140000),
+    (2, 'Bob', 34, 44000),
+    (6, 'Chris', 34, 40000),
+    (8, 'Derek', 41, 52000),
+    (11, 'Emmit', 57, 115000),
+    (16, 'Fred', 38, 38000);
+
+INSERT INTO `Customer` (`CustomerID`, `Name`)
+VALUES
+    (4, 'George'),
+    (6, 'Harry'),
+    (7, 'Ingrid'),
+    (11, 'Jerry');
+
+INSERT INTO `Orders` (`OrderID`, `OrderDate`, `CustomerID`, `SalespersonID`, `NumberOfUnits`, `CostOfUnit`)
+VALUES
+    (3, '2013-01-17', 4, 2, 4, 400),
+    (6, '2013-02-07', 4, 1, 1, 600),
+    (10, '2013-03-04', 7, 6, 2, 300),
+    (17, '2013-03-15', 6, 1, 5, 300),
+    (25, '2013-04-19', 11, 11, 7, 300),
+    (34, '2013-04-22', 11, 11, 100, 26),
+    (57, '2013-07-12', 7, 11, 14, 11);
